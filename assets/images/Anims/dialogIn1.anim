@@ -1,0 +1,61 @@
+{
+  "__type__": "cc.AnimationClip",
+  "_name": "dialogIn1",
+  "_objFlags": 0,
+  "_native": "",
+  "_duration": 0.3333333333333333,
+  "sample": 60,
+  "speed": 1.5,
+  "wrapMode": 1,
+  "curveData": {
+    "paths": {
+      "bg_top": {
+        "comps": {
+          "cc.Widget": {
+            "top": [
+              {
+                "frame": 0,
+                "value": -101
+              },
+              {
+                "frame": 0.3333333333333333,
+                "value": 0
+              }
+            ]
+          }
+        }
+      },
+      "bottom": {
+        "comps": {
+          "cc.Widget": {
+            "bottom": [
+              {
+                "frame": 0,
+                "value": -100
+              },
+              {
+                "frame": 0.3333333333333333,
+                "value": 0
+              }
+            ]
+          }
+        }
+      },
+      "BroadcastNode": {
+        "props": {
+          "opacity": [
+            {
+              "frame": 0,
+              "value": 0
+            },
+            {
+              "frame": 0.3333333333333333,
+              "value": 255
+            }
+          ]
+        }
+      }
+    }
+  },
+  "events": []
+}

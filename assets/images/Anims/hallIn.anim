@@ -1,0 +1,125 @@
+{
+  "__type__": "cc.AnimationClip",
+  "_name": "hallIn",
+  "_objFlags": 0,
+  "_native": "",
+  "_duration": 0.4166666666666667,
+  "sample": 60,
+  "speed": 1,
+  "wrapMode": 1,
+  "curveData": {
+    "paths": {
+      "center/gameNode": {
+        "comps": {
+          "cc.Widget": {
+            "right": [
+              {
+                "frame": 0,
+                "value": -1334
+              },
+              {
+                "frame": 0.25,
+                "value": 62.12399999999995
+              },
+              {
+                "frame": 0.4166666666666667,
+                "value": 0
+              }
+            ],
+            "left": [
+              {
+                "frame": 0,
+                "value": 1334
+              },
+              {
+                "frame": 0.25,
+                "value": -62.12399999999995
+              },
+              {
+                "frame": 0.4166666666666667,
+                "value": 0
+              }
+            ]
+          }
+        }
+      },
+      "center/gpq_dating_rw": {
+        "props": {
+          "opacity": [
+            {
+              "frame": 0,
+              "value": 0
+            },
+            {
+              "frame": 0.08333333333333333,
+              "value": 0
+            },
+            {
+              "frame": 0.25,
+              "value": 255
+            }
+          ],
+          "position": [
+            {
+              "frame": 0,
+              "value": [
+                -600.071,
+                -330.149,
+                0
+              ]
+            },
+            {
+              "frame": 0.25,
+              "value": [
+                -380,
+                -330.149,
+                0
+              ]
+            }
+          ]
+        }
+      },
+      "bg_top": {
+        "comps": {
+          "cc.Widget": {
+            "top": [
+              {
+                "frame": 0,
+                "value": -100
+              },
+              {
+                "frame": 0.25,
+                "value": 20
+              },
+              {
+                "frame": 0.4166666666666667,
+                "value": 0
+              }
+            ]
+          }
+        }
+      },
+      "bottomBg": {
+        "comps": {
+          "cc.Widget": {
+            "bottom": [
+              {
+                "frame": 0,
+                "value": -100
+              },
+              {
+                "frame": 0.25,
+                "value": 20
+              },
+              {
+                "frame": 0.4166666666666667,
+                "value": 0
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "events": []
+}

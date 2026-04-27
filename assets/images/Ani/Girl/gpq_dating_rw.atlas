@@ -1,0 +1,153 @@
+
+gpq_dating_rw.png
+size: 824,1026
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+erhuan
+  rotate: true
+  xy: 601, 540
+  size: 14, 34
+  orig: 14, 35
+  offset: 0, 0
+  index: -1
+fa_fashi
+  rotate: true
+  xy: 241, 36
+  size: 88, 98
+  orig: 90, 102
+  offset: 2, 3
+  index: -1
+fa_fashi1
+  rotate: false
+  xy: 401, 249
+  size: 34, 64
+  orig: 34, 64
+  offset: 0, 0
+  index: -1
+fa_fashi2
+  rotate: false
+  xy: 401, 373
+  size: 42, 58
+  orig: 42, 58
+  offset: 0, 0
+  index: -1
+fa_hou1
+  rotate: false
+  xy: 321, 531
+  size: 278, 493
+  orig: 289, 517
+  offset: 0, 12
+  index: -1
+fa_hou2
+  rotate: true
+  xy: 642, 274
+  size: 212, 178
+  orig: 212, 178
+  offset: 0, 0
+  index: -1
+fa_qian1
+  rotate: true
+  xy: 341, 2
+  size: 65, 156
+  orig: 79, 164
+  offset: 14, 1
+  index: -1
+fa_qian2
+  rotate: false
+  xy: 321, 433
+  size: 131, 96
+  orig: 131, 96
+  offset: 0, 0
+  index: -1
+fa_qian3
+  rotate: false
+  xy: 601, 606
+  size: 32, 78
+  orig: 32, 78
+  offset: 0, 0
+  index: -1
+fa_qian4
+  rotate: false
+  xy: 401, 315
+  size: 37, 56
+  orig: 37, 56
+  offset: 0, 0
+  index: -1
+lian
+  rotate: false
+  xy: 642, 79
+  size: 158, 193
+  orig: 158, 193
+  offset: 0, 0
+  index: -1
+qipao
+  rotate: false
+  xy: 2, 432
+  size: 317, 592
+  orig: 317, 592
+  offset: 0, 0
+  index: -1
+qunpai
+  rotate: true
+  xy: 601, 686
+  size: 338, 218
+  orig: 338, 218
+  offset: 0, 0
+  index: -1
+shou_you
+  rotate: true
+  xy: 454, 69
+  size: 460, 186
+  orig: 460, 191
+  offset: 0, 0
+  index: -1
+shou_youshang
+  rotate: true
+  xy: 2, 21
+  size: 103, 126
+  orig: 103, 126
+  offset: 0, 0
+  index: -1
+shou_zuo
+  rotate: true
+  xy: 2, 126
+  size: 304, 397
+  orig: 305, 397
+  offset: 0, 0
+  index: -1
+tui
+  rotate: true
+  xy: 642, 488
+  size: 196, 180
+  orig: 196, 180
+  offset: 0, 0
+  index: -1
+yan_you
+  rotate: true
+  xy: 401, 208
+  size: 39, 28
+  orig: 39, 32
+  offset: 0, 4
+  index: -1
+yan_zuo
+  rotate: true
+  xy: 601, 556
+  size: 48, 29
+  orig: 48, 30
+  offset: 0, 1
+  index: -1
+zuoxiu_hou
+  rotate: false
+  xy: 642, 8
+  size: 109, 69
+  orig: 109, 69
+  offset: 0, 0
+  index: -1
+zuoxiu_qian
+  rotate: false
+  xy: 130, 22
+  size: 109, 102
+  orig: 109, 102
+  offset: 0, 0
+  index: -1

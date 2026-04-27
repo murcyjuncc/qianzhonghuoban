@@ -1,0 +1,131 @@
+{
+  "__type__": "cc.AnimationClip",
+  "_name": "hallOut",
+  "_objFlags": 0,
+  "_native": "",
+  "_duration": 0.43333333333333335,
+  "sample": 60,
+  "speed": 1,
+  "wrapMode": 1,
+  "curveData": {
+    "paths": {
+      "bg_top": {
+        "comps": {
+          "cc.Widget": {
+            "top": [
+              {
+                "frame": 0,
+                "value": 0
+              },
+              {
+                "frame": 0.16666666666666666,
+                "value": -101
+              }
+            ]
+          }
+        }
+      },
+      "bottomBg": {
+        "comps": {
+          "cc.Widget": {
+            "bottom": [
+              {
+                "frame": 0,
+                "value": 0
+              },
+              {
+                "frame": 0.16666666666666666,
+                "value": -94.74799999999999
+              }
+            ]
+          }
+        }
+      },
+      "center/gameNode": {
+        "comps": {
+          "cc.Widget": {
+            "left": [
+              {
+                "frame": 0.11666666666666667,
+                "value": 0
+              },
+              {
+                "frame": 0.2833333333333333,
+                "value": -100
+              },
+              {
+                "frame": 0.43333333333333335,
+                "value": 1334
+              }
+            ],
+            "right": [
+              {
+                "frame": 0.11666666666666667,
+                "value": 0
+              },
+              {
+                "frame": 0.2833333333333333,
+                "value": 100
+              },
+              {
+                "frame": 0.43333333333333335,
+                "value": -1334
+              }
+            ]
+          }
+        }
+      },
+      "center/BroadcastNode": {
+        "props": {
+          "active": [
+            {
+              "frame": 0,
+              "value": false
+            }
+          ]
+        }
+      },
+      "center/gpq_dating_rw": {
+        "props": {
+          "position": [
+            {
+              "frame": 0,
+              "value": [
+                -380,
+                -330.149,
+                0
+              ]
+            },
+            {
+              "frame": 0.08333333333333333,
+              "value": [
+                -380,
+                -330.149,
+                0
+              ]
+            },
+            {
+              "frame": 0.2833333333333333,
+              "value": [
+                -600,
+                -330.149,
+                0
+              ]
+            }
+          ],
+          "opacity": [
+            {
+              "frame": 0,
+              "value": 255
+            },
+            {
+              "frame": 0.3333333333333333,
+              "value": 0
+            }
+          ]
+        }
+      }
+    }
+  },
+  "events": []
+}

@@ -1,0 +1,160 @@
+
+tiger.png
+size: 1024,1024
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+tiger/143
+  rotate: false
+  xy: 632, 1
+  size: 193, 183
+  orig: 193, 183
+  offset: 0, 0
+  index: -1
+tiger/1
+  rotate: false
+  xy: 827, 1
+  size: 157, 120
+  orig: 157, 120
+  offset: 0, 0
+  index: -1
+tiger/129
+  rotate: false
+  xy: 374, 1
+  size: 256, 362
+  orig: 256, 362
+  offset: 0, 0
+  index: -1
+tiger/15
+  rotate: false
+  xy: 959, 260
+  size: 5, 4
+  orig: 5, 4
+  offset: 0, 0
+  index: -1
+tiger/14
+  rotate: false
+  xy: 850, 123
+  size: 119, 135
+  orig: 119, 135
+  offset: 0, 0
+  index: -1
+tiger/2
+  rotate: false
+  xy: 277, 460
+  size: 89, 103
+  orig: 89, 103
+  offset: 0, 0
+  index: -1
+tiger/3
+  rotate: false
+  xy: 1, 544
+  size: 121, 62
+  orig: 121, 62
+  offset: 0, 0
+  index: -1
+tiger/8
+  rotate: false
+  xy: 832, 318
+  size: 169, 106
+  orig: 169, 106
+  offset: 0, 0
+  index: -1
+tiger/11
+  rotate: false
+  xy: 632, 186
+  size: 216, 130
+  orig: 216, 130
+  offset: 0, 0
+  index: -1
+tiger/13
+  rotate: false
+  xy: 124, 544
+  size: 69, 88
+  orig: 69, 88
+  offset: 0, 0
+  index: -1
+tiger/12
+  rotate: false
+  xy: 475, 365
+  size: 102, 85
+  orig: 102, 85
+  offset: 0, 0
+  index: -1
+tiger/10
+  rotate: false
+  xy: 417, 365
+  size: 56, 163
+  orig: 56, 163
+  offset: 0, 0
+  index: -1
+tiger/9
+  rotate: false
+  xy: 971, 123
+  size: 47, 94
+  orig: 47, 94
+  offset: 0, 0
+  index: -1
+tiger/7
+  rotate: false
+  xy: 277, 365
+  size: 138, 93
+  orig: 138, 93
+  offset: 0, 0
+  index: -1
+tiger/5
+  rotate: false
+  xy: 832, 426
+  size: 156, 97
+  orig: 156, 97
+  offset: 0, 0
+  index: -1
+tiger/eye_inner
+  rotate: false
+  xy: 632, 318
+  size: 198, 124
+  orig: 198, 124
+  offset: 0, 0
+  index: -1
+tiger/eyeL
+  rotate: false
+  xy: 850, 260
+  size: 54, 50
+  orig: 54, 50
+  offset: 0, 0
+  index: -1
+tiger/eyeR
+  rotate: false
+  xy: 906, 260
+  size: 51, 49
+  orig: 51, 49
+  offset: 0, 0
+  index: -1
+tiger/completeeyeL
+  rotate: false
+  xy: 195, 544
+  size: 54, 58
+  orig: 54, 58
+  offset: 0, 0
+  index: -1
+tiger/completeeyeR
+  rotate: false
+  xy: 971, 219
+  size: 52, 52
+  orig: 52, 52
+  offset: 0, 0
+  index: -1
+tiger/new4
+  rotate: false
+  xy: 1, 1
+  size: 371, 327
+  orig: 371, 327
+  offset: 0, 0
+  index: -1
+tiger/6
+  rotate: false
+  xy: 1, 330
+  size: 274, 212
+  orig: 274, 212
+  offset: 0, 0
+  index: -1
