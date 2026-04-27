@@ -24,6 +24,8 @@ export class RoomPanelController extends Component {
   public show() {
     this.node.active = true;
     const u = RoomService.getEntryUserInfo() || {};
+    const unionInfo = (u as any).unionInfo;
+
     // Try to prefill unionID if exists (userInfo -> config -> cached last input)
     if (this.unionIdEdit && !this.unionIdEdit.string) {
       const cfg = AppState.config || {};
@@ -77,6 +79,19 @@ export class RoomPanelController extends Component {
 
       if (inferred !== undefined && inferred !== null && inferred !== '') {
         this.unionIdEdit.string = String(inferred);
+      }
+    }
+
+    // If still no unionID, give actionable hint early (most servers require union/club for room ops).
+    if (this.unionIdEdit && !this.unionIdEdit.string) {
+      const hasUnionList =
+        Array.isArray(unionInfo) ? unionInfo.length > 0 : Array.isArray((u as any).unions) ? (u as any).unions.length > 0 : false;
+      if (!hasUnionList) {
+        this.setResult(
+          '未获取到 unionID：当前账号 unionInfo 为空。\n' +
+            '创建房间/快速加入通常需要先创建或加入亲友圈(茶馆)/联盟后才会分配 unionID。\n' +
+            '你也可以手动输入一个有效的 unionID 再试。'
+        );
       }
     }
 
@@ -169,6 +184,44 @@ export class RoomPanelController extends Component {
     return `${title} 返回：\n${json}`;
   }
 
+  private extractRoomSession(source: 'createRoom' | 'joinRoom' | 'quickJoin', resp: any) {
+    if (!resp || typeof resp !== 'object') return null;
+    const code = typeof resp.code === 'number' ? resp.code : NaN;
+    if (code !== 0) return null;
+
+    const pick = (...paths: any[]) => {
+      for (const p of paths) {
+        if (p !== undefined && p !== null && p !== '') return p;
+      }
+      return undefined;
+    };
+
+    const roomID = pick(
+      resp.roomID,
+      resp.roomId,
+      resp.rid,
+      resp.data?.roomID,
+      resp.data?.roomId,
+      resp.msg?.roomID,
+      resp.msg?.roomId,
+      resp.msg?.rid
+    );
+
+    const serverId = pick(resp.serverId, resp.serverID, resp.data?.serverId, resp.msg?.serverId);
+    const unionID = pick(resp.unionID, resp.unionId, resp.data?.unionID, resp.msg?.unionID);
+    const gameRuleID = pick(resp.gameRuleID, resp.gameRuleId, resp.data?.gameRuleID, resp.msg?.gameRuleID);
+
+    return {
+      source,
+      roomID,
+      roomId: resp.roomId,
+      serverId,
+      unionID,
+      gameRuleID,
+      raw: resp,
+    };
+  }
+
   private setResult(line: string) {
     // eslint-disable-next-line no-console
     console.log(`[RoomPanel] ${line}`);
@@ -197,7 +250,16 @@ export class RoomPanelController extends Component {
       if (gameRuleID === null) return;
       this.setResult(`quickJoin 请求中... unionID=${unionID} gameRuleID=${gameRuleID}`);
       const resp = await RoomService.quickJoin(unionID, gameRuleID);
-      this.setResult(this.formatResp('quickJoin', resp));
+      const line = this.formatResp('quickJoin', resp);
+      this.setResult(line);
+
+      const session = this.extractRoomSession('quickJoin', resp);
+      if (session) {
+        AppState.setRoom(session);
+        const rid = session.roomID ?? session.roomId ?? '(unknown)';
+        this.setResult(`quickJoin 成功，roomID=${rid}\n(下一步：迁移玩法模块后这里将切换到房间/游戏场景)`);
+        this.hide();
+      }
     } catch (e: any) {
       this.setResult(`quickJoin 异常：${e?.message || e}`);
     }
@@ -209,7 +271,16 @@ export class RoomPanelController extends Component {
       if (roomID === null) return;
       this.setResult(`joinRoom 请求中... roomID=${roomID}`);
       const resp = await RoomService.joinRoom(roomID);
-      this.setResult(this.formatResp('joinRoom', resp));
+      const line = this.formatResp('joinRoom', resp);
+      this.setResult(line);
+
+      const session = this.extractRoomSession('joinRoom', resp);
+      if (session) {
+        AppState.setRoom(session);
+        const rid = session.roomID ?? session.roomId ?? roomID;
+        this.setResult(`joinRoom 成功，roomID=${rid}\n(下一步：迁移玩法模块后这里将切换到房间/游戏场景)`);
+        this.hide();
+      }
     } catch (e: any) {
       this.setResult(`joinRoom 异常：${e?.message || e}`);
     }
@@ -241,7 +312,16 @@ export class RoomPanelController extends Component {
       }
       this.setResult(`createRoom 请求中... unionID=${unionID} gameRuleID=${gameRuleID}`);
       const resp = await RoomService.createRoom(unionID, gameRuleID, gameRule);
-      this.setResult(this.formatResp('createRoom', resp));
+      const line = this.formatResp('createRoom', resp);
+      this.setResult(line);
+
+      const session = this.extractRoomSession('createRoom', resp);
+      if (session) {
+        AppState.setRoom(session);
+        const rid = session.roomID ?? session.roomId ?? '(unknown)';
+        this.setResult(`createRoom 成功，roomID=${rid}\n(下一步：迁移玩法模块后这里将切换到房间/游戏场景)`);
+        this.hide();
+      }
     } catch (e: any) {
       this.setResult(`createRoom 异常：${e?.message || e}`);
     }
