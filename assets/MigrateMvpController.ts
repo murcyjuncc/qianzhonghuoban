@@ -1,7 +1,8 @@
-import { _decorator, Component, Label } from 'cc';
+import { _decorator, Component, Label, director } from 'cc';
 
 // Load legacy pomelo client (attaches window.pomelo)
 import './pomelo-creator-client.js';
+import { AppState } from './AppState';
 
 const { ccclass, property } = _decorator;
 
@@ -25,8 +26,17 @@ export class MigrateMvpController extends Component {
   @property({ tooltip: 'Auto register when login says not found (code=105)' })
   public autoRegister = true;
 
+  @property({ tooltip: 'Auto enter hall scene after entry OK' })
+  public autoEnterHall = true;
+
+  @property({ tooltip: 'Hall scene name to load' })
+  public hallSceneName = 'HallMvp';
+
   @property({ tooltip: 'Entry token (can be empty for connectivity test)' })
   public token = '';
+
+  @property({ tooltip: 'HTTP timeout ms for /login and /register' })
+  public httpTimeoutMs = 12000;
 
   @property(Label)
   public logLabel: Label | null = null;
@@ -36,8 +46,12 @@ export class MigrateMvpController extends Component {
     switch (code) {
       case 0:
         return 'OK';
+      case 500:
+        return '服务器异常（请查看 entry 返回的 msg.message/stack）';
       case 2:
         return '请求数据错误（服务端要求 msg.token，当前 token 为空或格式不对）';
+      case 3:
+        return '数据库错误（通常是 Mongo/Redis 未启动或连接地址不可达）';
       case 105:
         return '账号不存在/未绑定（首次生成游客账号需要先注册）';
       case 10:
@@ -58,14 +72,28 @@ export class MigrateMvpController extends Component {
     if (this.logLabel) this.logLabel.string = msg;
   }
 
-  private async postJson<T>(url: string, body: any): Promise<T> {
+  private async postJson<T>(url: string, body: any, tag: string): Promise<T> {
+    const controller = new AbortController();
+    const startedAt = Date.now();
+    const timer = setTimeout(() => {
+      const cost = Date.now() - startedAt;
+      this.log(`HTTP 超时，主动 abort（${cost}ms）：${tag} ${url}`);
+      controller.abort();
+    }, this.httpTimeoutMs);
     const resp = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
-    });
+      signal: controller.signal,
+    }).finally(() => clearTimeout(timer));
     if (!resp.ok) throw new Error(`HTTP ${resp.status} ${resp.statusText}`);
-    return (await resp.json()) as T;
+    const text = await resp.text();
+    try {
+      return JSON.parse(text) as T;
+    } catch (e: any) {
+      const cost = Date.now() - startedAt;
+      throw new Error(`响应不是JSON（${cost}ms）：${text.slice(0, 200)}`);
+    }
   }
 
   public async onClickLogin() {
@@ -87,7 +115,8 @@ export class MigrateMvpController extends Component {
     };
 
     try {
-      let data = await this.postJson<LoginResp>(loginUrl, { account, password, loginPlatform });
+      let data = await this.postJson<LoginResp>(loginUrl, { account, password, loginPlatform }, 'login');
+      this.log(`login 返回：${JSON.stringify(data)}`);
 
       if (!data || typeof data.code !== 'number') {
         this.log(`登录返回异常：${JSON.stringify(data)}`);
@@ -102,14 +131,19 @@ export class MigrateMvpController extends Component {
           avatar: '',
           sex: Math.floor(Math.random() * 2),
         };
-        const reg = await this.postJson<RegisterResp>(registerUrl, {
+        const reg = await this.postJson<RegisterResp>(
+          registerUrl,
+          {
           account,
           password,
           loginPlatform,
           smsCode: '',
           wxCode: '',
           registerInfo: JSON.stringify(registerInfo),
-        });
+          },
+          'register'
+        );
+        this.log(`register 返回：${JSON.stringify(reg)}`);
         if (!reg || typeof reg.code !== 'number') {
           this.log(`注册返回异常：${JSON.stringify(reg)}`);
           return;
@@ -172,14 +206,39 @@ export class MigrateMvpController extends Component {
         clearTimeout(timeoutId);
         this.log('Pomelo 连接成功，开始 entry...');
         const userInfo = {};
+        let entryDone = false;
+        const entryTimeoutMs = 8000;
+        const entryTimeoutId = setTimeout(() => {
+          if (entryDone) return;
+          entryDone = true;
+          this.log(
+            `entry 超时（${entryTimeoutMs}ms）：connector.entryHandler.entry 无回包。` +
+              `通常表示 connector 侧 handler 卡住/抛错未返回，或 DB/内部 RPC 阻塞。请看 gameServer 的 logic.log 是否有 connector entry error。`
+          );
+        }, entryTimeoutMs);
+
         pomelo.request(
           'connector.entryHandler.entry',
           { token: this.token, userInfo },
           (resp: any) => {
+            if (!entryDone) {
+              entryDone = true;
+              clearTimeout(entryTimeoutId);
+            }
+            // Always print full response for troubleshooting.
+            this.log(`entry 返回：${JSON.stringify(resp)}`);
+
             if (resp && typeof resp.code === 'number') {
-              this.log(`entry 返回 code=${resp.code}（${this.codeMessage(resp.code)}）`);
+              if (resp.code === 0 && resp.msg) {
+                AppState.setEntryData(this.token, resp.msg);
+                if (this.autoEnterHall) {
+                  this.log(`entry OK，切换场景：${this.hallSceneName}`);
+                  director.loadScene(this.hallSceneName);
+                }
+              }
+              this.log(`entry code=${resp.code}（${this.codeMessage(resp.code)}）`);
             } else {
-              this.log(`entry 返回：${JSON.stringify(resp)}`);
+              this.log(`entry 返回格式异常：${JSON.stringify(resp)}`);
             }
           }
         );
