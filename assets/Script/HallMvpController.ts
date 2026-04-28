@@ -1,5 +1,7 @@
 import { _decorator, Component, Label, Node, UITransform, Color } from 'cc';
 import { AppState } from './AppState';
+import { registerDefaultGameModules } from './gameModules/GameModuleRegistry';
+import { GameModuleManager } from './gameModules/GameModuleManager';
 
 const { ccclass, property } = _decorator;
 
@@ -12,8 +14,14 @@ export class HallMvpController extends Component {
   public roomPanel: Node | null = null;
 
   private roomOverlay: Node | null = null;
+  private didInitModules = false;
 
   start() {
+    if (!this.didInitModules) {
+      this.didInitModules = true;
+      registerDefaultGameModules();
+    }
+
     const u = AppState.userInfo || {};
     const uid = u.uid ?? u._id ?? '(unknown)';
     const nickname = u.nickname ?? '(no nickname)';
@@ -32,6 +40,17 @@ export class HallMvpController extends Component {
     const room = AppState.room;
     if (room && !this.roomOverlay) {
       this.showRoomOverlay(room);
+      // Fire and forget module resolution for now (placeholder enter()).
+      GameModuleManager.enterByContext({
+        roomID: room.roomID ?? room.roomId,
+        serverId: room.serverId,
+        unionID: room.unionID,
+        gameRuleID: room.gameRuleID,
+        raw: room.raw,
+      }).catch((e: any) => {
+        // eslint-disable-next-line no-console
+        console.warn('[GameModule] enterByContext failed:', e?.message || e);
+      });
     }
     // If room session cleared, ensure overlay is removed.
     if (!room && this.roomOverlay) {

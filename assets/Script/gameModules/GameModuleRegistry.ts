@@ -1,14 +1,41 @@
-export type GameModuleId = 'mahjong' | 'pdk' | 'phz';
+import { GameModuleManager } from './GameModuleManager';
+import type { GameModule } from './types';
 
-export type GameModule = {
-  id: GameModuleId;
-  displayName: string;
-  // later: bundleName, enterRoomScene, preloadAssets, route handlers...
-};
+const Modules: GameModule[] = [
+  {
+    id: 'mahjong',
+    displayName: '麻将',
+    // Placeholder: we haven't split bundles yet, keep it safe.
+    bundle: 'resources',
+    async enter(ctx) {
+      // Placeholder: real implementation will load bundle scene & init room.
+      // eslint-disable-next-line no-console
+      console.log('[GameModule][mahjong] enter ctx=', ctx);
+      // Keep user in hall for now.
+    },
+  },
+  {
+    id: 'pdk',
+    displayName: '跑得快',
+    bundle: 'resources',
+    async enter(ctx) {
+      // eslint-disable-next-line no-console
+      console.log('[GameModule][pdk] enter ctx=', ctx);
+    },
+  },
+  {
+    id: 'phz',
+    displayName: '跑胡子',
+    bundle: 'resources',
+    async enter(ctx) {
+      // eslint-disable-next-line no-console
+      console.log('[GameModule][phz] enter ctx=', ctx);
+    },
+  },
+];
 
-export const GameModuleRegistry: Record<GameModuleId, GameModule> = {
-  mahjong: { id: 'mahjong', displayName: '麻将' },
-  pdk: { id: 'pdk', displayName: '跑得快' },
-  phz: { id: 'phz', displayName: '跑胡子' },
-};
+export function registerDefaultGameModules() {
+  for (const m of Modules) GameModuleManager.register(m);
+}
+
 
