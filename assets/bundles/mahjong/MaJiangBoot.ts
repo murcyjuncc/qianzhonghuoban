@@ -1,4 +1,4 @@
-import { _decorator, Component, Label, Node, UITransform, Color, director } from 'cc';
+import { _decorator, Component, Label, Node, UITransform, Color, director, Widget } from 'cc';
 import { AppState } from '../../Script/AppState';
 
 const { ccclass } = _decorator;
@@ -14,18 +14,43 @@ export class MaJiangBoot extends Component {
     const overlay = new Node('MaJiangBootOverlay');
     overlay.layer = root.layer;
     root.addChild(overlay);
-    overlay.addComponent(UITransform).setContentSize(900, 520);
 
-    const label = overlay.addComponent(Label);
+    // Fullscreen overlay aligned to parent (Canvas) to avoid offscreen UI.
+    overlay.addComponent(UITransform).setContentSize(1280, 720);
+    const widget = overlay.addComponent(Widget);
+    widget.isAlignLeft = true;
+    widget.isAlignRight = true;
+    widget.isAlignTop = true;
+    widget.isAlignBottom = true;
+    widget.left = 0;
+    widget.right = 0;
+    widget.top = 0;
+    widget.bottom = 0;
+    widget.alignMode = 1;
+
+    const labelNode = new Node('Tip');
+    labelNode.layer = root.layer;
+    overlay.addChild(labelNode);
+    labelNode.addComponent(UITransform).setContentSize(980, 260);
+    const labelWidget = labelNode.addComponent(Widget);
+    labelWidget.isAlignHorizontalCenter = true;
+    labelWidget.isAlignVerticalCenter = true;
+    labelWidget.horizontalCenter = 0;
+    labelWidget.verticalCenter = 0;
+    labelWidget.alignMode = 1;
+
+    const label = labelNode.addComponent(Label);
     label.color = new Color(255, 255, 255, 255);
     const room = AppState.room;
     label.string =
       `麻将模块已加载（占位）\n` +
       `roomID=${room?.roomID ?? room?.roomId ?? '(none)'}\n` +
       `serverId=${room?.serverId ?? '(none)'}\n` +
-      `\n(下一步：创建 MaJiang 场景并在 enter() 中切换进入)`;
+      `\n点击任意位置返回大厅`;
     label.fontSize = 22;
     label.lineHeight = 26;
+    label.horizontalAlign = Label.HorizontalAlign.CENTER;
+    label.verticalAlign = Label.VerticalAlign.CENTER;
 
     overlay.on(Node.EventType.TOUCH_END, () => {
       AppState.setRoom(null);
