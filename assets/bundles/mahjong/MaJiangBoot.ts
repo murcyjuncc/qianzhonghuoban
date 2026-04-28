@@ -1,4 +1,4 @@
-import { _decorator, Component, Label, Node, UITransform, Color, director, Widget, Button } from 'cc';
+import { _decorator, Component, Label, Node, UITransform, Color, director, Vec3 } from 'cc';
 import { AppState } from '../../Script/AppState';
 
 const { ccclass } = _decorator;
@@ -10,7 +10,7 @@ const { ccclass } = _decorator;
 @ccclass('MaJiangBoot')
 export class MaJiangBoot extends Component {
   start() {
-    // Align to Canvas directly (Widget requires a valid UITransform on parent).
+    // Mount under Canvas so UI is always visible.
     const canvasNode = this.node.parent ?? this.node;
     const canvasTrans = canvasNode.getComponent(UITransform);
 
@@ -18,30 +18,15 @@ export class MaJiangBoot extends Component {
     overlay.layer = canvasNode.layer;
     canvasNode.addChild(overlay);
 
-    // Fullscreen overlay aligned to parent (Canvas) to avoid offscreen UI.
-    const ot = overlay.addComponent(UITransform);
-    ot.setContentSize(canvasTrans?.contentSize?.width ?? 1280, canvasTrans?.contentSize?.height ?? 720);
-    const widget = overlay.addComponent(Widget);
-    widget.isAlignLeft = true;
-    widget.isAlignRight = true;
-    widget.isAlignTop = true;
-    widget.isAlignBottom = true;
-    widget.left = 0;
-    widget.right = 0;
-    widget.top = 0;
-    widget.bottom = 0;
-    widget.alignMode = 1;
+    // Fullscreen overlay (no Widget to avoid layout edge cases).
+    overlay.addComponent(UITransform).setContentSize(canvasTrans?.contentSize?.width ?? 1280, canvasTrans?.contentSize?.height ?? 720);
+    overlay.setPosition(new Vec3(0, 0, 0));
 
-    const labelNode = new Node('Tip');
+    const labelNode = new Node('TipLabel');
     labelNode.layer = canvasNode.layer;
     overlay.addChild(labelNode);
-    labelNode.addComponent(UITransform).setContentSize(980, 260);
-    const labelWidget = labelNode.addComponent(Widget);
-    labelWidget.isAlignHorizontalCenter = true;
-    labelWidget.isAlignVerticalCenter = true;
-    labelWidget.horizontalCenter = 0;
-    labelWidget.verticalCenter = 0;
-    labelWidget.alignMode = 1;
+    labelNode.addComponent(UITransform).setContentSize(980, 300);
+    labelNode.setPosition(new Vec3(0, 80, 0));
 
     const label = labelNode.addComponent(Label);
     label.color = new Color(255, 255, 255, 255);
@@ -55,37 +40,20 @@ export class MaJiangBoot extends Component {
     label.lineHeight = 26;
     label.horizontalAlign = Label.HorizontalAlign.CENTER;
     label.verticalAlign = Label.VerticalAlign.CENTER;
+    label.overflow = Label.Overflow.RESIZE_HEIGHT;
+    label.enableWrapText = true;
 
-    const btnNode = new Node('BtnBackHall');
+    const btnNode = new Node('BackHallButton');
     btnNode.layer = canvasNode.layer;
     overlay.addChild(btnNode);
-    btnNode.addComponent(UITransform).setContentSize(220, 72);
-    const btnWidget = btnNode.addComponent(Widget);
-    btnWidget.isAlignHorizontalCenter = true;
-    btnWidget.horizontalCenter = 0;
-    btnWidget.isAlignBottom = true;
-    btnWidget.bottom = 80;
-    btnWidget.alignMode = 1;
+    btnNode.addComponent(UITransform).setContentSize(320, 80);
+    btnNode.setPosition(new Vec3(0, -220, 0));
 
-    const btn = btnNode.addComponent(Button);
-    btn.transition = Button.Transition.NONE;
-
-    const btnLabelNode = new Node('Label');
-    btnLabelNode.layer = canvasNode.layer;
-    btnNode.addChild(btnLabelNode);
-    btnLabelNode.addComponent(UITransform).setContentSize(220, 72);
-    const blw = btnLabelNode.addComponent(Widget);
-    blw.isAlignHorizontalCenter = true;
-    blw.isAlignVerticalCenter = true;
-    blw.horizontalCenter = 0;
-    blw.verticalCenter = 0;
-    blw.alignMode = 1;
-
-    const btnLabel = btnLabelNode.addComponent(Label);
-    btnLabel.string = '返回大厅';
+    const btnLabel = btnNode.addComponent(Label);
+    btnLabel.string = '【返回大厅】';
     btnLabel.color = new Color(255, 255, 255, 255);
-    btnLabel.fontSize = 28;
-    btnLabel.lineHeight = 32;
+    btnLabel.fontSize = 32;
+    btnLabel.lineHeight = 36;
     btnLabel.horizontalAlign = Label.HorizontalAlign.CENTER;
     btnLabel.verticalAlign = Label.VerticalAlign.CENTER;
 
