@@ -1,5 +1,6 @@
 import { GameModuleManager } from './GameModuleManager';
 import type { GameModule } from './types';
+import { AppState } from '../AppState';
 
 const Modules: GameModule[] = [
   {
@@ -8,10 +9,23 @@ const Modules: GameModule[] = [
     // First real bundle.
     bundle: 'mahjong',
     async enter(ctx) {
-      // Placeholder: real implementation will load bundle scene & init room.
-      // eslint-disable-next-line no-console
-      console.log('[GameModule][mahjong] enter ctx=', ctx);
-      // Keep user in hall for now.
+      // Keep old naming convention: MaJiang (as used by assets/images/Game/MaJiang).
+      const sceneName = 'MaJiang';
+      try {
+        await GameModuleManager.loadSceneFromBundle('mahjong', sceneName);
+        return;
+      } catch (e: any) {
+        // Bundle exists but scene not created yet; don't crash.
+        // eslint-disable-next-line no-console
+        console.warn(`[GameModule][mahjong] scene '${sceneName}' not ready, stay in hall.`, e?.message || e);
+      }
+
+      // As a placeholder, keep the hall overlay, but persist room context.
+      AppState.setRoom({
+        ...AppState.room,
+        gameRuleID: ctx.gameRuleID ?? AppState.room?.gameRuleID,
+        unionID: ctx.unionID ?? AppState.room?.unionID,
+      });
     },
   },
   {
