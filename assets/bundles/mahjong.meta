@@ -1,0 +1,13 @@
+{
+  "ver": "1.2.0",
+  "importer": "directory",
+  "imported": true,
+  "uuid": "6b6b8f6c-3b6f-4c5e-9a3a-1f0b5d7e2c11",
+  "files": [],
+  "subMetas": {},
+  "userData": {
+    "isBundle": true,
+    "bundleName": "mahjong"
+  }
+}
+

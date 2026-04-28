@@ -5,8 +5,8 @@ const Modules: GameModule[] = [
   {
     id: 'mahjong',
     displayName: '麻将',
-    // Placeholder: we haven't split bundles yet, keep it safe.
-    bundle: 'resources',
+    // First real bundle.
+    bundle: 'mahjong',
     async enter(ctx) {
       // Placeholder: real implementation will load bundle scene & init room.
       // eslint-disable-next-line no-console
