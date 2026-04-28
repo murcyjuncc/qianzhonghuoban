@@ -55,16 +55,20 @@ export class MaJiangBoot extends Component {
       `麻将模块已加载（占位）\n` +
       `roomID=${room?.roomID ?? room?.roomId ?? '(none)'}\n` +
       `serverId=${room?.serverId ?? '(none)'}\n` +
-      `\n点击任意位置返回大厅`;
+      `\n0.3s 后点击任意位置返回大厅`;
     label.fontSize = 22;
     label.lineHeight = 26;
     label.horizontalAlign = Label.HorizontalAlign.CENTER;
     label.verticalAlign = Label.VerticalAlign.CENTER;
 
-    overlay.on(Node.EventType.TOUCH_END, () => {
-      AppState.setRoom(null);
-      director.loadScene('HallMvp');
-    });
+    // Avoid immediately bouncing back due to the click that triggered scene switch
+    // (the same pointer event can land on the new scene in some browsers).
+    this.scheduleOnce(() => {
+      overlay.on(Node.EventType.TOUCH_END, () => {
+        AppState.setRoom(null);
+        director.loadScene('HallMvp');
+      });
+    }, 0.3);
   }
 }
 
