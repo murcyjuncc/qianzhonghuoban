@@ -1170,29 +1170,36 @@ function Pomelo() {
   var rsa = window.rsa;
   var disconnectCb = null;
 
-  // In some preview contexts (e.g. file://), access to storage may be blocked.
-  // Provide a safe storage shim so legacy pomelo code won't crash.
-  (function ensureSafeLocalStorage() {
-    if (typeof window === 'undefined') return;
-    var mem = {};
-    function makeMemStorage() {
-      return {
-        getItem: function (k) { return Object.prototype.hasOwnProperty.call(mem, k) ? mem[k] : null; },
-        setItem: function (k, v) { mem[k] = String(v); },
-        removeItem: function (k) { delete mem[k]; },
-        clear: function () { mem = {}; }
-      };
-    }
+  // In some preview contexts, access to storage may be blocked or throws.
+  // We avoid writing back to window.localStorage (can be readonly), and instead
+  // route all storage operations through safe wrappers.
+  var __mcp_mem_ls__ = {};
+  function __mcp_make_mem_storage__() {
+    return {
+      getItem: function (k) { return Object.prototype.hasOwnProperty.call(__mcp_mem_ls__, k) ? __mcp_mem_ls__[k] : null; },
+      setItem: function (k, v) { __mcp_mem_ls__[k] = String(v); },
+      removeItem: function (k) { delete __mcp_mem_ls__[k]; },
+      clear: function () { __mcp_mem_ls__ = {}; }
+    };
+  }
+  function __mcp_get_storage__() {
     try {
       // Some environments throw on access, not just on setItem.
       var ls = window.localStorage;
       var key = '__mcp_pomelo_ls_test__';
       ls.setItem(key, '1');
       ls.removeItem(key);
+      return ls;
     } catch (e) {
-      window.localStorage = makeMemStorage();
+      return __mcp_make_mem_storage__();
     }
-  })();
+  }
+  function __mcp_ls_get_item__(k) {
+    try { return __mcp_get_storage__().getItem(k); } catch (e) { return null; }
+  }
+  function __mcp_ls_set_item__(k, v) {
+    try { __mcp_get_storage__().setItem(k, v); } catch (e) { }
+  }
 
   var RES_OK = 200;
   var RES_FAIL = 500;
@@ -1325,8 +1332,9 @@ function Pomelo() {
     var maxReconnectAttempts = params.maxReconnectAttempts || DEFAULT_MAX_RECONNECT_ATTEMPTS;
     reconnectUrl = url;
     //Add protobuf version
-    if (window.localStorage && window.localStorage.getItem('protos') && protoVersion === 0) {
-      var protos = JSON.parse(window.localStorage.getItem('protos'));
+    var __mcp_cached_protos__ = __mcp_ls_get_item__('protos');
+    if (__mcp_cached_protos__ && protoVersion === 0) {
+      var protos = JSON.parse(__mcp_cached_protos__);
 
       protoVersion = protos.version || 0;
       serverProtos = protos.server || {};
@@ -1633,8 +1641,8 @@ function Pomelo() {
       serverProtos = protos.server || {};
       clientProtos = protos.client || {};
 
-      //Save protobuf protos to localStorage
-      window.localStorage.setItem('protos', JSON.stringify(protos));
+      // Save protobuf protos to localStorage (or in-memory fallback)
+      __mcp_ls_set_item__('protos', JSON.stringify(protos));
 
       if (!!protobuf) {
         protobuf.init({ encoderProtos: protos.client, decoderProtos: protos.server });

@@ -1,4 +1,4 @@
-import { _decorator, Component, Label, Node, UITransform, Color } from 'cc';
+import { _decorator, Component, Label, Node, UITransform, Color, director } from 'cc';
 import { AppState } from '../../Script/AppState';
 
 const { ccclass } = _decorator;
@@ -26,6 +26,11 @@ export class MaJiangBoot extends Component {
       `\n(下一步：创建 MaJiang 场景并在 enter() 中切换进入)`;
     label.fontSize = 22;
     label.lineHeight = 26;
+
+    overlay.on(Node.EventType.TOUCH_END, () => {
+      AppState.setRoom(null);
+      director.loadScene('HallMvp');
+    });
   }
 }
 

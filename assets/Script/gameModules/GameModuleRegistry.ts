@@ -1,6 +1,8 @@
 import { GameModuleManager } from './GameModuleManager';
 import type { GameModule } from './types';
 import { AppState } from '../AppState';
+import { Node, director } from 'cc';
+import { MaJiangBoot } from '../../bundles/mahjong/MaJiangBoot';
 
 const Modules: GameModule[] = [
   {
@@ -13,6 +15,13 @@ const Modules: GameModule[] = [
       const sceneName = 'MaJiang';
       try {
         await GameModuleManager.loadSceneFromBundle('mahjong', sceneName);
+        const scene = director.getScene();
+        if (scene) {
+          const bootNode = new Node('MaJiangBoot');
+          bootNode.layer = scene.layer;
+          scene.addChild(bootNode);
+          bootNode.addComponent(MaJiangBoot);
+        }
         return;
       } catch (e: any) {
         // Bundle exists but scene not created yet; don't crash.

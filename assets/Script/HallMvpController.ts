@@ -130,6 +130,27 @@ export class HallMvpController extends Component {
       return;
     }
 
+    // MVP convenience: simulate a successful room enter to verify module loading,
+    // since unionID might not be available on fresh guest accounts.
+    if (f === 'Union') {
+      if (!AppState.room) {
+        AppState.setRoom({
+          source: 'quickJoin',
+          roomID: 10001,
+          serverId: 'connector-mock',
+          unionID: 1,
+          gameRuleID: 1,
+          raw: { mock: true },
+        });
+        if (this.infoLabel) {
+          this.infoLabel.string =
+            '已模拟进入房间：将尝试加载麻将 bundle 并切换到 MaJiang 场景。\n' +
+            '（后续打通 unionID 后会改为真实进房逻辑）';
+        }
+        return;
+      }
+    }
+
     const line = `点击入口：${f}\\n(下一步迁移该模块真实UI/逻辑)`;
     if (this.infoLabel) this.infoLabel.string = line;
   }
