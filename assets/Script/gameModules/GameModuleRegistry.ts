@@ -29,8 +29,6 @@ const Modules: GameModule[] = [
             scene.addChild(bootNode);
           }
           bootNode.addComponent(MaJiangBoot);
-          // eslint-disable-next-line no-console
-          console.log('[GameModule][mahjong] boot attached under', canvas ? 'Canvas' : 'Scene', 'active=', bootNode.active);
         }
         return;
       } catch (e: any) {

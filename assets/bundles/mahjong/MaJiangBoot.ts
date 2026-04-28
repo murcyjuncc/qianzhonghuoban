@@ -1,4 +1,4 @@
-import { _decorator, Component, Label, Node, UITransform, Color, director, Widget } from 'cc';
+import { _decorator, Component, Label, Node, UITransform, Color, director, Widget, Button } from 'cc';
 import { AppState } from '../../Script/AppState';
 
 const { ccclass } = _decorator;
@@ -10,14 +10,9 @@ const { ccclass } = _decorator;
 @ccclass('MaJiangBoot')
 export class MaJiangBoot extends Component {
   start() {
-    // eslint-disable-next-line no-console
-    console.log('[MaJiangBoot] start, node=', this.node?.name, 'parent=', this.node?.parent?.name);
-
     // Align to Canvas directly (Widget requires a valid UITransform on parent).
     const canvasNode = this.node.parent ?? this.node;
     const canvasTrans = canvasNode.getComponent(UITransform);
-    // eslint-disable-next-line no-console
-    console.log('[MaJiangBoot] canvas=', canvasNode?.name, 'hasUITransform=', !!canvasTrans, 'size=', canvasTrans?.contentSize);
 
     const overlay = new Node('MaJiangBootOverlay');
     overlay.layer = canvasNode.layer;
@@ -55,16 +50,48 @@ export class MaJiangBoot extends Component {
       `麻将模块已加载（占位）\n` +
       `roomID=${room?.roomID ?? room?.roomId ?? '(none)'}\n` +
       `serverId=${room?.serverId ?? '(none)'}\n` +
-      `\n0.3s 后点击任意位置返回大厅`;
+      `\n(点击按钮返回大厅)`;
     label.fontSize = 22;
     label.lineHeight = 26;
     label.horizontalAlign = Label.HorizontalAlign.CENTER;
     label.verticalAlign = Label.VerticalAlign.CENTER;
 
-    // Avoid immediately bouncing back due to the click that triggered scene switch
-    // (the same pointer event can land on the new scene in some browsers).
+    const btnNode = new Node('BtnBackHall');
+    btnNode.layer = canvasNode.layer;
+    overlay.addChild(btnNode);
+    btnNode.addComponent(UITransform).setContentSize(220, 72);
+    const btnWidget = btnNode.addComponent(Widget);
+    btnWidget.isAlignHorizontalCenter = true;
+    btnWidget.horizontalCenter = 0;
+    btnWidget.isAlignBottom = true;
+    btnWidget.bottom = 80;
+    btnWidget.alignMode = 1;
+
+    const btn = btnNode.addComponent(Button);
+    btn.transition = Button.Transition.NONE;
+
+    const btnLabelNode = new Node('Label');
+    btnLabelNode.layer = canvasNode.layer;
+    btnNode.addChild(btnLabelNode);
+    btnLabelNode.addComponent(UITransform).setContentSize(220, 72);
+    const blw = btnLabelNode.addComponent(Widget);
+    blw.isAlignHorizontalCenter = true;
+    blw.isAlignVerticalCenter = true;
+    blw.horizontalCenter = 0;
+    blw.verticalCenter = 0;
+    blw.alignMode = 1;
+
+    const btnLabel = btnLabelNode.addComponent(Label);
+    btnLabel.string = '返回大厅';
+    btnLabel.color = new Color(255, 255, 255, 255);
+    btnLabel.fontSize = 28;
+    btnLabel.lineHeight = 32;
+    btnLabel.horizontalAlign = Label.HorizontalAlign.CENTER;
+    btnLabel.verticalAlign = Label.VerticalAlign.CENTER;
+
+    // Delay binding to avoid the click that triggered scene switch.
     this.scheduleOnce(() => {
-      overlay.on(Node.EventType.TOUCH_END, () => {
+      btnNode.on(Node.EventType.TOUCH_END, () => {
         AppState.setRoom(null);
         director.loadScene('HallMvp');
       });
