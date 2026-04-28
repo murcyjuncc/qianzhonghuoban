@@ -10,9 +10,14 @@ const { ccclass } = _decorator;
 @ccclass('MaJiangBoot')
 export class MaJiangBoot extends Component {
   start() {
+    // eslint-disable-next-line no-console
+    console.log('[MaJiangBoot] start, node=', this.node?.name, 'parent=', this.node?.parent?.name);
+
     // Align to Canvas directly (Widget requires a valid UITransform on parent).
     const canvasNode = this.node.parent ?? this.node;
     const canvasTrans = canvasNode.getComponent(UITransform);
+    // eslint-disable-next-line no-console
+    console.log('[MaJiangBoot] canvas=', canvasNode?.name, 'hasUITransform=', !!canvasTrans, 'size=', canvasTrans?.contentSize);
 
     const overlay = new Node('MaJiangBootOverlay');
     overlay.layer = canvasNode.layer;

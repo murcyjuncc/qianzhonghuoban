@@ -17,10 +17,20 @@ const Modules: GameModule[] = [
         await GameModuleManager.loadSceneFromBundle('mahjong', sceneName);
         const scene = director.getScene();
         if (scene) {
+          // Put boot under Canvas to ensure UI layer rendering.
+          const canvas = scene.getChildByName('Canvas');
           const bootNode = new Node('MaJiangBoot');
-          bootNode.layer = scene.layer;
-          scene.addChild(bootNode);
+          if (canvas) {
+            bootNode.layer = canvas.layer;
+            canvas.addChild(bootNode);
+          } else {
+            // Fallback: use UI_2D layer mask value.
+            bootNode.layer = 33554432;
+            scene.addChild(bootNode);
+          }
           bootNode.addComponent(MaJiangBoot);
+          // eslint-disable-next-line no-console
+          console.log('[GameModule][mahjong] boot attached under', canvas ? 'Canvas' : 'Scene', 'active=', bootNode.active);
         }
         return;
       } catch (e: any) {
