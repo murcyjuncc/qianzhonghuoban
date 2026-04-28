@@ -10,13 +10,17 @@ const { ccclass } = _decorator;
 @ccclass('MaJiangBoot')
 export class MaJiangBoot extends Component {
   start() {
-    const root = this.node;
+    // Align to Canvas directly (Widget requires a valid UITransform on parent).
+    const canvasNode = this.node.parent ?? this.node;
+    const canvasTrans = canvasNode.getComponent(UITransform);
+
     const overlay = new Node('MaJiangBootOverlay');
-    overlay.layer = root.layer;
-    root.addChild(overlay);
+    overlay.layer = canvasNode.layer;
+    canvasNode.addChild(overlay);
 
     // Fullscreen overlay aligned to parent (Canvas) to avoid offscreen UI.
-    overlay.addComponent(UITransform).setContentSize(1280, 720);
+    const ot = overlay.addComponent(UITransform);
+    ot.setContentSize(canvasTrans?.contentSize?.width ?? 1280, canvasTrans?.contentSize?.height ?? 720);
     const widget = overlay.addComponent(Widget);
     widget.isAlignLeft = true;
     widget.isAlignRight = true;
@@ -29,7 +33,7 @@ export class MaJiangBoot extends Component {
     widget.alignMode = 1;
 
     const labelNode = new Node('Tip');
-    labelNode.layer = root.layer;
+    labelNode.layer = canvasNode.layer;
     overlay.addChild(labelNode);
     labelNode.addComponent(UITransform).setContentSize(980, 260);
     const labelWidget = labelNode.addComponent(Widget);
